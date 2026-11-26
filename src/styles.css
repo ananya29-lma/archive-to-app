@@ -191,7 +191,7 @@
 
 .about-reveal-paragraph {
   font-family: var(--font-editorial);
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: 0;
@@ -204,7 +204,7 @@
 
 @media (max-width: 767px) {
   .about-reveal-paragraph {
-    font-size: 1.625rem;
+    font-size: 1.25rem;
     line-height: 1.2;
   }
 }
