@@ -1,0 +1,104 @@
+{
+  "source": "code-archive",
+  "artifact": "bavesh-ventures-and-visions-main.zip",
+  "capabilities": [
+    {
+      "capability": "code",
+      "source": "TanStack Start v1 + React 19 + Tailwind CSS v4 portfolio app (1 route: /, 6 portfolio components, 7 local image assets)",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "schema",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "records",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "auth_identities",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "authorization",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "uploaded_file_bytes",
+      "source": "7 bundled static images under src/assets/",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "external_providers",
+      "source": "Public CDN media (d8j0ntlcm91z4.cloudfront.net, images.higgs.ai) and Google Fonts (fonts.googleapis.com, fonts.gstatic.com)",
+      "outcome": "preserve",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "public_endpoints",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "callbacks",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "webhooks",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "schedules",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "secrets",
+      "source": "none detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "cutover",
+      "source": "Static portfolio site on /",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "Publish from Lovable when ready"
+    },
+    {
+      "capability": "verification",
+      "source": "Build, tests, and live browser rendering of /",
+      "outcome": "verify",
+      "status": "verified",
+      "next_action": "none"
+    }
+  ]
+}
