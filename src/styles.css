@@ -182,6 +182,13 @@
   animation: marquee 44s linear infinite;
 }
 
+@utility text-editorial {
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
 .about-reveal-paragraph {
   font-family: var(--font-editorial);
   font-size: 2.5rem;

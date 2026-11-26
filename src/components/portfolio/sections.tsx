@@ -244,11 +244,11 @@ export function About() {
       <div ref={statsRef} className="mt-16 grid gap-10 sm:grid-cols-3">
         {aboutStats.map((stat, i) => (
           <div key={stat.label}>
-            <p className="text-display text-5xl tabular-nums text-accent md:text-6xl">
+            <p className="text-editorial text-5xl tabular-nums text-accent md:text-6xl">
               {counts[i] ?? stat.target}
               {stat.suffix}
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">{stat.label}</p>
+            <p className="text-editorial mt-2 text-sm text-muted-foreground">{stat.label}</p>
           </div>
         ))}
       </div>
