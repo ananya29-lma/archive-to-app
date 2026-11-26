@@ -453,7 +453,8 @@
 .hx-overlap {
   position: relative;
   z-index: 10;
-  margin-top: -14svh;
+  /* Reveal About while the pinned scene is still only lightly blurred. */
+  margin-top: -55svh;
   background-color: var(--background);
   box-shadow: 0 -48px 90px oklch(0 0 0 / 40%);
 }
