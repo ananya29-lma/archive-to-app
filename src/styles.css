@@ -425,8 +425,18 @@
   --font-hero: "Harbor Inter", "Inter", system-ui, sans-serif;
 }
 
+.hx-scroll-stage {
+  position: relative;
+  height: 175svh;
+  min-height: 900px;
+}
+
 .hx-hero {
   --u: min(calc(100vw / 1440), calc(100svh / 900));
+  --hx-p: 0;
+  --hx-p-blur: 0;
+  --hx-p-fade: 0;
+  --hx-p-veil: 0;
   position: sticky;
   top: 0;
   z-index: 0;
@@ -443,8 +453,9 @@
 .hx-overlap {
   position: relative;
   z-index: 10;
+  margin-top: -14svh;
   background-color: var(--background);
-  box-shadow: 0 -24px 60px oklch(0 0 0 / 55%);
+  box-shadow: 0 -48px 90px oklch(0 0 0 / 40%);
 }
 
 .hx-stage {
@@ -454,6 +465,8 @@
   width: max(100%, calc(max(100svh, 520px) * 16 / 9));
   aspect-ratio: 16 / 9;
   translate: -50% -50%;
+  filter: blur(calc(var(--hx-p-blur) * 8px)) brightness(calc(1 - var(--hx-p) * 0.42));
+  will-change: filter;
 }
 
 .hx-layer {
@@ -474,11 +487,25 @@
 .hx-back {
   transform-origin: 50% 40%;
 }
+.hx-back > img,
+.hx-back > video {
+  transform: scale(calc(1 + var(--hx-p) * 0.05));
+  will-change: transform;
+}
 .hx-mid {
   transform-origin: 50% 45%;
 }
+.hx-mid > img {
+  transform: scale(calc(1 - var(--hx-p) * 0.05)) translate3d(0, calc(var(--hx-p) * 2%), 0);
+  will-change: transform;
+}
 .hx-front {
   transform-origin: 50% 100%;
+}
+.hx-front > img,
+.hx-front > .hx-glass {
+  transform: translate3d(0, calc(var(--hx-p) * 8%), 0) scale(calc(1 - var(--hx-p) * 0.06));
+  will-change: transform;
 }
 
 .hx-rain {
@@ -525,6 +552,20 @@
   letter-spacing: -0.045em;
   line-height: 1;
   color: var(--hx-text);
+  transform-origin: 50% 45%;
+  transform: translate3d(0, calc(var(--hx-p) * -10svh), 0) scale(calc(1 - var(--hx-p) * 0.42));
+  opacity: calc(1 - var(--hx-p-fade));
+  filter: blur(calc(var(--hx-p-blur) * 14px));
+  will-change: transform, opacity, filter;
+}
+.hx-exit-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: var(--background);
+  opacity: var(--hx-p-veil);
+  will-change: opacity;
 }
 .hx-word-inner {
   display: inline-block;
@@ -583,5 +624,29 @@
 @media (max-width: 819.98px) {
   .hx-hero {
     --u: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hx-scroll-stage {
+    height: 100svh;
+    min-height: 520px;
+  }
+  .hx-overlap {
+    margin-top: 0;
+  }
+  .hx-stage,
+  .hx-word,
+  .hx-back > img,
+  .hx-back > video,
+  .hx-mid > img,
+  .hx-front > img,
+  .hx-front > .hx-glass {
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+  .hx-exit-veil {
+    opacity: 0;
   }
 }

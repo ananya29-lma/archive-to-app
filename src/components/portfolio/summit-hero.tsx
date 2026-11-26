@@ -65,6 +65,7 @@ function loadImage(src: string) {
 }
 
 export function SummitHero() {
+  const scrollWrapRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLDivElement>(null);
@@ -148,6 +149,32 @@ export function SummitHero() {
       finishNow();
       return () => window.removeEventListener("resize", layout);
     }
+
+    // Scroll-driven recession: headline and depth layers shrink, drift, blur and dissolve into the next section.
+    let scrollRaf = 0;
+    const updateScroll = () => {
+      scrollRaf = 0;
+      const wrap = scrollWrapRef.current;
+      if (!wrap) return;
+      const runway = wrap.offsetHeight - window.innerHeight;
+      const raw = runway > 0 ? clamp(-wrap.getBoundingClientRect().top / runway, 0, 1) : 0;
+      const eased = raw * raw * (3 - 2 * raw);
+      const blur = Math.pow(raw, 1.35);
+      const fadeRaw = clamp((raw - 0.12) / 0.78, 0, 1);
+      const fade = fadeRaw * fadeRaw;
+      const veilRaw = clamp((raw - 0.18) / 0.82, 0, 1);
+      const veil = veilRaw * veilRaw * (3 - 2 * veilRaw);
+      hero.style.setProperty("--hx-p", eased.toFixed(4));
+      hero.style.setProperty("--hx-p-blur", blur.toFixed(4));
+      hero.style.setProperty("--hx-p-fade", fade.toFixed(4));
+      hero.style.setProperty("--hx-p-veil", veil.toFixed(4));
+    };
+    const onScroll = () => {
+      if (!scrollRaf) scrollRaf = requestAnimationFrame(updateScroll);
+    };
+    updateScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
 
     // Rain loop: two copies of the clip crossfade so the 3.6 s loop never visibly restarts.
     const rainVideos = [rainARef.current, rainBRef.current].filter(
@@ -313,6 +340,9 @@ export function SummitHero() {
     return () => {
       cancelled = true;
       window.removeEventListener("resize", layout);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
       timeouts.forEach((id) => window.clearTimeout(id));
       if (raf) cancelAnimationFrame(raf);
       anims.forEach((a) => a.cancel());
@@ -327,71 +357,75 @@ export function SummitHero() {
   const src = (id: string) => (media ? imageUrl(id, media.w) : undefined);
 
   return (
-    <section ref={heroRef} className="hx-hero" data-intro="true" aria-label="Harborlux">
-      <div ref={stageRef} className="hx-stage">
-        <div ref={backRef} className="hx-layer hx-back">
-          {media && <img src={src(IMAGES.back)} alt="" draggable={false} />}
-          {media && !media.reduced && (
-            <>
-              <video ref={rainARef} className="hx-rain" src={RAIN_URL} muted playsInline preload="auto" aria-hidden="true" />
-              <video ref={rainBRef} className="hx-rain" src={RAIN_URL} muted playsInline preload="auto" aria-hidden="true" />
-            </>
-          )}
-          <div ref={shadeRef} className="hx-shade" />
+    <div ref={scrollWrapRef} className="hx-scroll-stage">
+      <section ref={heroRef} className="hx-hero" data-intro="true" aria-label="Harborlux">
+        <div ref={stageRef} className="hx-stage">
+          <div ref={backRef} className="hx-layer hx-back">
+            {media && <img src={src(IMAGES.back)} alt="" draggable={false} />}
+            {media && !media.reduced && (
+              <>
+                <video ref={rainARef} className="hx-rain" src={RAIN_URL} muted playsInline preload="auto" aria-hidden="true" />
+                <video ref={rainBRef} className="hx-rain" src={RAIN_URL} muted playsInline preload="auto" aria-hidden="true" />
+              </>
+            )}
+            <div ref={shadeRef} className="hx-shade" />
+          </div>
+
+          <div ref={headlineRef} className="hx-headline">
+            <h1 ref={wordRef} className="hx-word" aria-label="BAVESH">
+              <span ref={wordInnerRef} className="hx-word-inner" aria-hidden="true">
+                {LETTERS.map((l, i) => (
+                  <span
+                    key={i}
+                    ref={(el) => {
+                      letterRefs.current[i] = el;
+                    }}
+                    className="hx-letter"
+                  >
+                    {l}
+                  </span>
+                ))}
+              </span>
+              <span ref={probeRef} className="hx-probe" aria-hidden="true" />
+            </h1>
+          </div>
+
+          <div ref={midRef} className="hx-layer hx-mid">
+            {media && <img src={src(IMAGES.mid)} alt="" draggable={false} />}
+          </div>
+
+          <div ref={frontRef} className="hx-layer hx-front">
+            <div className="hx-glass" />
+            {media && (
+              <img
+                src={src(IMAGES.front)}
+                alt="A man in a long dark coat at a glass balcony overlooking a rainy neon harbour"
+                draggable={false}
+              />
+            )}
+          </div>
         </div>
 
-        <div ref={headlineRef} className="hx-headline">
-          <h1 ref={wordRef} className="hx-word" aria-label="BAVESH">
-            <span ref={wordInnerRef} className="hx-word-inner" aria-hidden="true">
-              {LETTERS.map((l, i) => (
-                <span
-                  key={i}
-                  ref={(el) => {
-                    letterRefs.current[i] = el;
-                  }}
-                  className="hx-letter"
-                >
-                  {l}
-                </span>
-              ))}
-            </span>
-            <span ref={probeRef} className="hx-probe" aria-hidden="true" />
-          </h1>
+        <div className="hx-exit-veil" aria-hidden="true" />
+
+        <div ref={openingRef} className="hx-opening" aria-hidden="true">
+          {media && <img src={src(IMAGES.aerial)} alt="" draggable={false} />}
+          {media && !media.reduced && <video ref={tiltRef} src={TILT_URL} muted playsInline preload="auto" />}
         </div>
 
-        <div ref={midRef} className="hx-layer hx-mid">
-          {media && <img src={src(IMAGES.mid)} alt="" draggable={false} />}
+        <div className="hx-doors" aria-hidden="true">
+          <div
+            ref={doorLRef}
+            className="hx-door hx-door-l"
+            style={media ? { backgroundImage: `url("${imageUrl(IMAGES.doors, media.w)}")` } : undefined}
+          />
+          <div
+            ref={doorRRef}
+            className="hx-door hx-door-r"
+            style={media ? { backgroundImage: `url("${imageUrl(IMAGES.doors, media.w)}")` } : undefined}
+          />
         </div>
-
-        <div ref={frontRef} className="hx-layer hx-front">
-          <div className="hx-glass" />
-          {media && (
-            <img
-              src={src(IMAGES.front)}
-              alt="A man in a long dark coat at a glass balcony overlooking a rainy neon harbour"
-              draggable={false}
-            />
-          )}
-        </div>
-      </div>
-
-      <div ref={openingRef} className="hx-opening" aria-hidden="true">
-        {media && <img src={src(IMAGES.aerial)} alt="" draggable={false} />}
-        {media && !media.reduced && <video ref={tiltRef} src={TILT_URL} muted playsInline preload="auto" />}
-      </div>
-
-      <div className="hx-doors" aria-hidden="true">
-        <div
-          ref={doorLRef}
-          className="hx-door hx-door-l"
-          style={media ? { backgroundImage: `url("${imageUrl(IMAGES.doors, media.w)}")` } : undefined}
-        />
-        <div
-          ref={doorRRef}
-          className="hx-door hx-door-r"
-          style={media ? { backgroundImage: `url("${imageUrl(IMAGES.doors, media.w)}")` } : undefined}
-        />
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
